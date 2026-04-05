@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ../infra/Dockerfile/backend
+      dockerfile: Dockerfile.dev
+    container_name: backend_dev
+    env_file:
+      - ./env/backend.dev.env
+    volumes:
+      - ../backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+
+  frontend:
+    build:
+      context: ../infra/Dockerfile/frontend/Dockerfile.dev
+      dockerfile: Dockerfile.dev
+    container_name: rontend_dev
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+
+  db:
+    image: postgres:15
+    container_name: db_dev
+    restart: always
+    env_file:
+      - ./env/backend.dev.env
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data/
+
+volumes:
+  pgdata_dev:

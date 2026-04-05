@@ -1,0 +1,28 @@
+FROM python:3.12-slim
+
+# Evitar problemas de buffer
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
+    postgresql-client \
+    && apt-get clean
+
+# Copiar requirements
+COPY requirements.txt /app/
+
+# Instalar libs Python
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copiar o projeto (como fallback, mas usaremos volume)
+COPY . /app/
+
+# Script para esperar o banco
+COPY wait-for-db.sh /wait-for-db.sh
+RUN chmod +x /wait-for-db.sh
+
+# Comando dev
+CMD [ "sh", "-c", "python manage.py runserver 0.0.0.0:8000" ]
