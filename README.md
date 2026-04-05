@@ -51,6 +51,11 @@ O script automaticamente:
 
 ## 🧱 Estrutura do projeto
 
+cat << 'EOF' > README.md
+
+## Estrutura do projeto
+
+\`\`\`
 DjanReactor/
 ├── infra/
 │ ├── .utils/
@@ -66,11 +71,13 @@ DjanReactor/
 │ ├── docker-compose.dev.yml
 │ └── docker-compose.prod.yml
 │
-├── backend/ # gerado automaticamente
-├── frontend/ # gerado automaticamente
-│
+├── backend/
+├── frontend/
 ├── setup.sh
 └── README.md
+\`\`\`
+
+EOF
 
 ---
 
