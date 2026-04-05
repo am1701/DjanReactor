@@ -22,6 +22,7 @@ Você não perde tempo configurando nada. Executa um script e começa a desenvol
 Clone o repositório:
 
 git clone https://github.com/am1701/djanreactor.git
+
 cd djanreactor
 
 Dê permissão de execução:
