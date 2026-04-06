@@ -50,7 +50,7 @@ def get_env_file_path():
 
 def get_valid_characters():
     
-    invalidos= ['\t','\n',' ','\r','.',',',"'",'\x0b','\x0c','`','´']
+    invalidos= ['\t','\n',' ','\r','.',',',"'",'\x0b','\x0c','`','´','\\']
     filtered = filter(lambda c : c not in invalidos, printable)
     caracters = ''.join(filtered)
     return caracters

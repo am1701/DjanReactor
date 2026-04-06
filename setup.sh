@@ -1,28 +1,51 @@
 #!/bin/bash
 
 set -e
-echo 'Iniciando o projeto django'
+set -o pipefail
 
-mkdir backend
-cd backend
-python3 -m venv venv
+# =========================
+# VALIDAÇÃO INICIAL
+# =========================
 
-venv/bin/pip install django djangorestframework python-decouple psycopg2-binary djangorestframework-simplejwt django-cors-headers django-extensions
-venv/bin/pip freeze > requirements.txt
+PROJECT_NAME=$1
+
+if [ -z "$PROJECT_NAME" ]; then
+  echo "❌ Informe o nome do projeto"
+  echo "Uso: ./setup.sh meu_projeto"
+  exit 1
+fi
+
+BASE_DIR=$(pwd)
+TARGET_DIR="$BASE_DIR/../$PROJECT_NAME"
+
+echo ""
+echo "🚀 DjanReactor"
+echo ""
+echo "📦 Projeto: $PROJECT_NAME"
+echo ""
+echo "📁 Será criado em:"
+echo "   $TARGET_DIR"
+echo ""
+
+read -p "Continuar? (y/n): " CONFIRM
+
+if [ "$CONFIRM" != "y" ]; then
+  echo "❌ Cancelado"
+  exit 1
+fi
+
+# =========================
+# CRIA PASTA DO PROJETO
+# =========================
+
+mkdir -p "$TARGET_DIR"
+cd "$TARGET_DIR"
 
 
-echo 'Gerando o arquivo .env.dev'
-venv/bin/python ../infra/.utils/generate_env.py
+DJANREACTOR_ROOT="$BASE_DIR"
 
-
-echo 'Iniciando um novo projeto django'
-venv/bin/python -m django startproject core .
-
-
-cp ../infra/.utils/reconfigure_settings.py .
-venv/bin/python reconfigure_settings.py
-
-venv/bin/python -m django startapp api
-cd api
-touch urls.py
-cd ..
+source "$DJANREACTOR_ROOT/scripts/modules/base.sh"
+source "$DJANREACTOR_ROOT/scripts/modules/env.sh"
+source "$DJANREACTOR_ROOT/scripts/modules/config.sh"
+source "$DJANREACTOR_ROOT/scripts/modules/django.sh"
+source "$DJANREACTOR_ROOT/scripts/modules/app.sh"
